@@ -1,8 +1,10 @@
 <template>
-  <div id="app">
+  <div>
     <h1>Let's Play: Tic Tac Toe</h1>
     <h2>(implemented using Vue.js)</h2>
-    <Game/>
+    <div id="game">
+      <Game />
+    </div>
   </div>
 </template>
 
@@ -17,5 +19,16 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+h1 {
+  margin: 2vh auto 1vh;
+}
+
+h2 {
+  margin: 1vh auto 1vh;
+}
+
+#game {
+  margin: 4vh auto 1vh;
+}
 </style>
