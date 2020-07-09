@@ -24,6 +24,7 @@
         >
       </div>
     </div>
+    {{ title }}
   </div>
 </template>
 
@@ -31,15 +32,19 @@
 import * as ttt from "../../lib/tictactoe/tictactoe.js";
 
 // TODO handle handicap
+const levels = [
+  { label: "trivial", handicap: 90 },
+  { label: "easy", handicap: 65 },
+  { label: "medium", handicap: 48 },
+  { label: "hard", handicap: 24 },
+  { label: "impossible", handicap: 5 },
+];
+
 // TODO handle stats
 
 export default {
   name: "Game",
   props: {
-    handicap: {
-      type: Number,
-      default: 80,
-    },
     playerBegins: {
       type: Boolean,
       default: true,
@@ -52,7 +57,8 @@ export default {
   data: () => {
     return {
       ttt: ttt,
-      game: new ttt.Game(),
+      currentLevel: 0,
+      game: '',
       state: [
         [0, 0, 0],
         [0, 0, 0],
@@ -73,12 +79,15 @@ export default {
     };
   },
   methods: {
-    sleep: (milliseconds) => {
+    sleep(milliseconds) {
       return new Promise((resolve) => setTimeout(resolve, milliseconds));
     },
 
     async newGame(playerBegins = true) {
-      this.game = new ttt.Game(this.handicap, playerBegins);
+      this.game = new ttt.Game(
+        levels[this.currentLevel].handicap,
+        playerBegins
+      );
       // array assigments are not too reactive otherwise ;)
       this.state = [...this.game.state];
       this.finalState = [
@@ -97,7 +106,7 @@ export default {
       this.locked = false;
     },
 
-    resetStats: () => {
+    resetStats() {
       this.stats = {
         computer: 0,
         draw: 0,
@@ -165,6 +174,11 @@ export default {
         }
       }
     },
+  },
+
+  created() {
+    console.log(this.playerBegins)
+    this.newGame(this.playerBegins);
   },
 };
 </script>
