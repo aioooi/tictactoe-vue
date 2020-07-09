@@ -53,11 +53,11 @@ export default {
       default: 300,
     },
   },
-  data: () => {
+  data() {
     return {
       ttt: ttt,
       currentLevel: 2, // default: 'medium'
-      game: '',
+      game: "",
       state: [
         [0, 0, 0],
         [0, 0, 0],
