@@ -3,6 +3,7 @@
     <ScoreboardCell
       v-bind:label="playerName"
       v-bind:value="stats.player"
+      v-bind:edit="true"
     ></ScoreboardCell>
     <ScoreboardCell label="Draw" v-bind:value="stats.draw"></ScoreboardCell>
     <ScoreboardCell

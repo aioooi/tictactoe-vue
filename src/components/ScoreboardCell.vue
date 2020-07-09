@@ -1,14 +1,21 @@
 <template>
   <transition name="scale-animation" mode="out-in">
     <div :key="value">
-      <div class="cell">{{ label }}</div>
+      <Input v-if="edit" v-bind:value="label" />
+      <div v-else class="cell">{{ label }}</div>
       <div class="cell">{{ value }}</div>
     </div>
   </transition>
 </template>
 
 <script>
+import Input from "./Input.vue";
+
 export default {
+  name: "ScoreboardCell",
+  components: {
+    Input,
+  },
   props: {
     label: {
       type: String,
