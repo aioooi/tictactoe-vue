@@ -1,12 +1,38 @@
 <template>
   <div class="board">
-    <div v-for="x in 9" v-bind:key="x" class="square" style="color: magenta">
-      {{ Math.floor((x - 1) / 3) }} {{ (x - 1) % 3 }}
+    <div
+      v-for="x in 9"
+      v-bind:key="x"
+      class="square"
+      v-bind:class="[
+        state[Math.floor((x - 1) / 3)][(x - 1) % 3] !== ttt.EMPTY
+          ? 'played'
+          : '',
+        finalState[Math.floor((x - 1) / 3)][(x - 1) % 3] === 1
+          ? 'highlight-winning-line'
+          : '',
+      ]"
+      v-on:click="() => move(Math.floor((x - 1) / 3), (x - 1) % 3)"
+    >
+      <div class="tag">
+        <span v-if="state[Math.floor((x - 1) / 3)][(x - 1) % 3] === ttt.PLAYER"
+          >&#x0fbe;</span
+        >
+        <span
+          v-if="state[Math.floor((x - 1) / 3)][(x - 1) % 3] === ttt.COMPUTER"
+          >&#x262f;</span
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import * as ttt from "../../lib/tictactoe/tictactoe.js";
+
+// TODO handle handicap
+// TODO handle stats
+
 export default {
   name: "Game",
   props: {
@@ -23,17 +49,135 @@ export default {
       default: 300,
     },
   },
+  data: () => {
+    return {
+      ttt: ttt,
+      game: new ttt.Game(),
+      state: [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+      ],
+      finalState: [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+      ],
+      locked: false,
+      playerBeginsAfterDraw: true,
+      stats: {
+        computer: 0,
+        draw: 0,
+        player: 0,
+      },
+    };
+  },
+  methods: {
+    sleep: (milliseconds) => {
+      return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    },
+
+    async newGame(playerBegins = true) {
+      this.game = new ttt.Game(this.handicap, playerBegins);
+      // array assigments are not too reactive otherwise ;)
+      this.state = [...this.game.state];
+      this.finalState = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+      ];
+
+      if (!playerBegins) {
+        this.locked = true;
+        await this.sleep(50);
+        this.game.makeMove();
+      }
+
+      this.state = [...this.game.state];
+      this.locked = false;
+    },
+
+    resetStats: () => {
+      this.stats = {
+        computer: 0,
+        draw: 0,
+        player: 0,
+      };
+    },
+
+    async processResults() {
+      let playerBegins = true;
+      if (this.game.winner === ttt.COMPUTER) {
+        this.stats.computer += 1;
+      } else if (this.game.winner === ttt.PLAYER) {
+        this.stats.player += 1;
+        this.playerBegins = false;
+      } else {
+        this.stats.draw += 1;
+        this.playerBegins = this.playerBeginsAfterDraw;
+        this.playerBeginsAfterDraw = !this.playerBeginsAfterDraw;
+      }
+
+      this.finalState = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+      ];
+
+      if (this.game.winner !== ttt.EMPTY) {
+        let line = this.game._winningLine;
+
+        line.forEach((e) => {
+          this.finalState[Math.floor(e / 3)][e % 3] = 1;
+        });
+      }
+
+      await this.sleep(1200);
+      this.newGame(playerBegins);
+    },
+
+    // handle user click on sqaure
+    async move(i, j) {
+      if (!this.locked) {
+        this.locked = true;
+        try {
+          let gameFinished = this.game.playerMove(i, j);
+          this.state = [...this.game.state];
+
+          if (gameFinished) {
+            this.processResults();
+          } else {
+            await this.sleep(
+              Math.floor((0.6 + 0.4 * Math.random()) * this.delay)
+            );
+            gameFinished = this.game.makeMove();
+            this.state = [...this.game.state];
+
+            if (gameFinished) {
+              this.processResults();
+            } else {
+              this.locked = false;
+            }
+          }
+        } catch (e) {
+          console.error(e);
+          this.locked = false;
+        }
+      }
+    },
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-:root {
+/* declared in global.css: */
+/* :root {
   --PLAYED-COLOR: #e9e9e9;
   --HIGHLIGHT-COLOR: #ffa7a7;
   --HOVER-COLOR: #fff5f5;
   --MARKER-COLOR: #black;
-}
+} */
 
 .board {
   margin: 0 auto;
