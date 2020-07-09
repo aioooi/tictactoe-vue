@@ -1,34 +1,39 @@
 <template>
-  <div class="board">
-    <div
-      v-for="x in 9"
-      v-bind:key="x"
-      class="square"
-      v-bind:class="[
-        state[Math.floor((x - 1) / 3)][(x - 1) % 3] !== ttt.EMPTY
-          ? 'played'
-          : '',
-        finalState[Math.floor((x - 1) / 3)][(x - 1) % 3] === 1
-          ? 'highlight-winning-line'
-          : '',
-      ]"
-      v-on:click="() => move(Math.floor((x - 1) / 3), (x - 1) % 3)"
-    >
-      <div class="tag">
-        <span v-if="state[Math.floor((x - 1) / 3)][(x - 1) % 3] === ttt.PLAYER"
-          >&#x0fbe;</span
-        >
-        <span
-          v-if="state[Math.floor((x - 1) / 3)][(x - 1) % 3] === ttt.COMPUTER"
-          >&#x262f;</span
-        >
+  <div>
+    <div class="board">
+      <div
+        v-for="x in 9"
+        v-bind:key="x"
+        class="square"
+        v-bind:class="[
+          state[Math.floor((x - 1) / 3)][(x - 1) % 3] !== ttt.EMPTY
+            ? 'played'
+            : '',
+          finalState[Math.floor((x - 1) / 3)][(x - 1) % 3] === 1
+            ? 'highlight-winning-line'
+            : '',
+        ]"
+        v-on:click="() => move(Math.floor((x - 1) / 3), (x - 1) % 3)"
+      >
+        <div class="tag">
+          <span
+            v-if="state[Math.floor((x - 1) / 3)][(x - 1) % 3] === ttt.PLAYER"
+            >&#x0fbe;</span
+          >
+          <span
+            v-if="state[Math.floor((x - 1) / 3)][(x - 1) % 3] === ttt.COMPUTER"
+            >&#x262f;</span
+          >
+        </div>
       </div>
     </div>
+    <Scoreboard />
   </div>
 </template>
 
 <script>
 import * as ttt from "../../lib/tictactoe/tictactoe.js";
+import Scoreboard from "./Scoreboard.vue"
 
 // TODO handle handicap
 const levels = [
@@ -52,6 +57,9 @@ export default {
       type: Number,
       default: 300,
     },
+  },
+  components: {
+    Scoreboard,
   },
   data() {
     return {
