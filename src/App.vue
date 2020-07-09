@@ -4,7 +4,7 @@
     <h2>(implemented using Vue.js)</h2>
     <div id="game">
       <!-- prop playerBegins is referred to as 'player-begins' @vue...  -->
-      <Game :player-begins=true :delay=1000></Game>
+      <Game :player-begins=true :delay=345></Game>
     </div>
   </div>
 </template>
