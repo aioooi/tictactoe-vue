@@ -1,11 +1,25 @@
-<template><div>
-    {{ playerName }}
+<template>
+  <div class="grid">
+    <ScoreboardCell
+      v-bind:label="playerName"
+      v-bind:value="stats.player"
+    ></ScoreboardCell>
+    <ScoreboardCell label="Draw" v-bind:value="stats.draw"></ScoreboardCell>
+    <ScoreboardCell
+      label="Computer"
+      v-bind:value="stats.computer"
+    ></ScoreboardCell>
   </div>
 </template>
 
 <script>
+import ScoreboardCell from "./ScoreboardCell.vue";
+
 export default {
   name: "Scoreboard",
+  components: {
+    ScoreboardCell,
+  },
   props: {
     stats: {
       computer: 0,

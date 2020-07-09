@@ -27,13 +27,13 @@
         </div>
       </div>
     </div>
-    <Scoreboard />
+    <Scoreboard v-bind:stats="this.stats"></Scoreboard>
   </div>
 </template>
 
 <script>
 import * as ttt from "../../lib/tictactoe/tictactoe.js";
-import Scoreboard from "./Scoreboard.vue"
+import Scoreboard from "./Scoreboard.vue";
 
 // TODO handle handicap
 const levels = [
@@ -127,10 +127,10 @@ export default {
         this.stats.computer += 1;
       } else if (this.game.winner === ttt.PLAYER) {
         this.stats.player += 1;
-        this.playerBegins = false;
+        playerBegins = false;
       } else {
         this.stats.draw += 1;
-        this.playerBegins = this.playerBeginsAfterDraw;
+        playerBegins = this.playerBeginsAfterDraw;
         this.playerBeginsAfterDraw = !this.playerBeginsAfterDraw;
       }
 
