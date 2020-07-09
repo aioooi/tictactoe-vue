@@ -24,7 +24,6 @@
         >
       </div>
     </div>
-    {{ title }}
   </div>
 </template>
 
