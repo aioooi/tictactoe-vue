@@ -56,7 +56,7 @@ export default {
   data: () => {
     return {
       ttt: ttt,
-      currentLevel: 0,
+      currentLevel: 2, // default: 'medium'
       game: '',
       state: [
         [0, 0, 0],
@@ -176,7 +176,6 @@ export default {
   },
 
   created() {
-    console.log(this.playerBegins)
     this.newGame(this.playerBegins);
   },
 };
