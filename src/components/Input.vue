@@ -1,19 +1,20 @@
 <template>
-  <div>
+  <form v-on:submit.prevent="handleInput">
     <div v-if="disabled">
-      <input type="text" v-bind:value="value" disabled />
+      <input type="text" v-bind:value="content" disabled />
     </div>
     <div v-else style="position:relative">
       <label v-if="!focus">&#x270E;</label>
       <input
-        v-bind:value="value"
+        ref="_input"
+        v-bind:value="content"
         type="text"
         v-on:blur="handleInput"
         v-on:focus="hidePencil"
       />
     </div>
     <input type="submit" />
-  </div>
+  </form>
 </template>
 
 <script>
@@ -33,6 +34,7 @@ export default {
     return {
       disabled: false,
       focus: false,
+      content: this.value, 
     };
   },
   methods: {
@@ -40,8 +42,9 @@ export default {
       return this.focus;
     },
     handleInput() {
+      this.content = this.$refs._input.value;
       if (this.editOnlyOnce) {
-        console.log(this.disabled);
+        this.disabled = true;
       }
     },
     hidePencil() {
