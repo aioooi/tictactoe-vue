@@ -54,7 +54,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 input[type="text"] {
   text-align: center;
   margin: 0;
