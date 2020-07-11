@@ -28,23 +28,14 @@
       </div>
     </div>
     <Scoreboard v-bind:stats="this.stats"></Scoreboard>
+    <InputRadio v-bind:label="this.levels.map((v) => v.label)" v-on:select="levelChanged"></InputRadio>
   </div>
 </template>
 
 <script>
 import * as ttt from "../../lib/tictactoe/tictactoe.js";
 import Scoreboard from "./Scoreboard.vue";
-
-// TODO handle handicap
-const levels = [
-  { label: "trivial", handicap: 90 },
-  { label: "easy", handicap: 65 },
-  { label: "medium", handicap: 48 },
-  { label: "hard", handicap: 24 },
-  { label: "impossible", handicap: 5 },
-];
-
-// TODO handle stats
+import InputRadio from "./InputRadio.vue";
 
 export default {
   name: "Game",
@@ -60,6 +51,7 @@ export default {
   },
   components: {
     Scoreboard,
+    InputRadio,
   },
   data() {
     return {
@@ -83,6 +75,13 @@ export default {
         draw: 0,
         player: 0,
       },
+      levels: [
+        { label: "trivial", handicap: 90 },
+        { label: "easy", handicap: 65 },
+        { label: "medium", handicap: 48 },
+        { label: "hard", handicap: 24 },
+        { label: "impossible", handicap: 5 },
+      ],
     };
   },
   methods: {
@@ -92,7 +91,7 @@ export default {
 
     async newGame(playerBegins = true) {
       this.game = new ttt.Game(
-        levels[this.currentLevel].handicap,
+        this.levels[this.currentLevel].handicap,
         playerBegins
       );
       // array assigments are not too reactive otherwise ;)
@@ -181,6 +180,14 @@ export default {
         }
       }
     },
+
+    // handle level selection
+    levelChanged(level) {
+      console.log(`new level: ${this.levels[level].label}`)
+      this.currentLevel = level;
+      this.resetStats();
+      this.newGame();
+    }
   },
 
   created() {
