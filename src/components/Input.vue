@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import EventBus from "../EventBus.js";
+
 export default {
   name: "Input",
   props: {
@@ -34,7 +36,7 @@ export default {
     return {
       disabled: false,
       focus: false,
-      content: this.value, 
+      content: this.value,
     };
   },
   methods: {
@@ -46,6 +48,8 @@ export default {
       if (this.editOnlyOnce) {
         this.disabled = true;
       }
+      // propagate Event over EventBus to Scoreboard:
+      EventBus.$emit("playerNameChanged", this.content);
     },
     hidePencil() {
       this.focus = true;

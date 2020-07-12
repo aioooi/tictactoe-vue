@@ -3,7 +3,7 @@
     <ScoreboardCell
       v-bind:label="playerName"
       v-bind:value="stats.player"
-      v-bind:edit="true"
+      v-bind:edit="edit"
     ></ScoreboardCell>
     <ScoreboardCell label="Draw" v-bind:value="stats.draw"></ScoreboardCell>
     <ScoreboardCell
@@ -15,6 +15,7 @@
 
 <script>
 import ScoreboardCell from "./ScoreboardCell.vue";
+import EventBus from "../EventBus.js";
 
 export default {
   name: "Scoreboard",
@@ -35,7 +36,18 @@ export default {
   data() {
     return {
       playerName: this.name,
+      edit: true,
     };
+  },
+  methods: {
+    playerNameChanged(name) {
+      console.log(`name changed: "${name}"`);
+      this.playerName = name;
+      this.edit = false;
+    },
+  },
+  mounted() {
+    EventBus.$on("playerNameChanged", (name) => this.playerNameChanged(name));
   },
 };
 </script>
